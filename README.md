@@ -1,4 +1,4 @@
-# MVP Front End
+# Demo sell NFT
 
 
 Build with [Next.js](https://nextjs.org/)
@@ -11,8 +11,8 @@ Build with [Next.js](https://nextjs.org/)
 First, clone the project and go to the project folder:
 
 ```sh
-git clone https://gitlab.redfoxlabs.io/rfl-valt/mvp-frontend.git
-cd mvp-frontend
+git clone https://github.com/tdtrung93/demo-sell-nft.git
+cd demo-sell-nft
 ```
 
 Install `yarn` dependencies
@@ -28,7 +28,3 @@ yarn dev
 ```
 
 ## Contributing
-
-### Create Feature Branch
-
-#with name like `feature/feature-name`
