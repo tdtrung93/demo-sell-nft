@@ -1,0 +1,86 @@
+@import '@styles/scss/_variables.scss';
+@import '@styles/scss/_mixins.scss';
+
+.container {
+  display: grid;
+  padding: 1rem;
+  grid-row-gap: 1rem;
+
+  @media (min-width: $s) {
+    grid-template-columns: 230px auto;
+    grid-column-gap: 25px;
+    grid-row-gap: 0;
+  }
+}
+
+.left {
+  @include flex-center();
+}
+
+.right {
+}
+
+.heading {
+  font-family: Trasandina;
+  font-style: italic;
+  font-weight: bold;
+  font-size: 40px;
+  line-height: 30px;
+  margin-bottom: 25px;
+
+  @media (min-width: $m) {
+    margin-bottom: 1rem;
+    font-size: 60px;
+    line-height: 49px;
+  }
+}
+
+.img {
+}
+
+.button {
+  width: 100%;
+  background-color: $color-red;
+  border-radius: 4px;
+  @include transition();
+  @include flex-center();
+  margin: 17px 0px;
+  height: 46px;
+
+  font-family: Roboto Condensed;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 32px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: $color-white;
+
+  &:hover {
+    color: $color-red;
+    background-color: $color-white;
+    border: 1px solid $color-red;
+
+    .iconOpensea {
+      fill: $color-red;
+    }
+  }
+}
+
+.iconOpensea {
+  width: 24px;
+  height: 24px;
+  fill: $color-white;
+  margin-right: 10px;
+}
+
+.buttonDisabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.circleProgress {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  color: $color-white !important;
+}

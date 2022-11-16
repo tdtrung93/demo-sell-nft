@@ -1,0 +1,141 @@
+@mixin text-ellipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+@mixin text-ellipsis-in-line($line: 1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+}
+
+@mixin ratio($w, $h) {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    display: block;
+    content: '';
+    padding-bottom: percentage($h / $w);
+  }
+}
+
+@mixin transition(
+  $property: $transition-property,
+  $duration: $transition-duration,
+  $timing: $transition-timing,
+  $delay: $transition-delay) {
+    transition: $property $duration $timing $delay;
+}
+
+@mixin fixed-full {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin abs-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin abs-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin abs-vertical-center {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@mixin abs-horizontal-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@mixin abs-top-left($top: 0, $left: 0) {
+  position: absolute;
+  top: $top;
+  left: $left;
+}
+
+@mixin abs-top-right($top: 0, $right: 0) {
+  position: absolute;
+  top: $top;
+  right: $right;
+}
+
+@mixin abs-bottom-right($bottom: 0, $right: 0) {
+  position: absolute;
+  bottom: $bottom;
+  right: $right;
+}
+
+@mixin abs-bottom-left($bottom: 0, $left: 0) {
+  position: absolute;
+  bottom: $bottom;
+  left: $left;
+}
+
+@mixin abs-left-center($left: 0) {
+  position: absolute;
+  top: 50%;
+  left: $left;
+  transform: translateY(-50%);
+}
+
+@mixin abs-right-center($right: 0) {
+  position: absolute;
+  top: 50%;
+  right: $right;
+  transform: translateY(-50%);
+}
+
+@mixin grid-center {
+  display: grid;
+  place-items: center;
+  place-content: center;
+}
+
+@mixin grid-between {
+  display: grid;
+  align-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-between-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin translate-center {
+  transform: translate(-50%, -50%);
+}
+
+@mixin translate-vertical-center {
+  transform: translateY(-50%);
+}

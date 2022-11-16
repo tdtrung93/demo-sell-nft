@@ -1,0 +1,136 @@
+@import '@styles/scss/_variables.scss';
+@import '@styles/scss/_mixins.scss';
+
+.item {
+  background-color: $color-black;
+  color: $color-white;
+  border-radius: 16px;
+  font-family: Roboto Condensed;
+  padding: 1rem;
+  background: linear-gradient(149.47deg, #151515 0%, #000000 100%);
+  border: 1px solid #4d4d4d;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+
+  @media (min-width: $s) {
+    text-align: center;
+    display: block;
+    margin-bottom: 0rem;
+  }
+
+  @media (min-width: $lg) {
+    // margin-bottom: 10px;
+  }
+}
+
+.imgShop {
+  border-radius: 16px;
+  max-width: calc(100% - 32px);
+}
+
+.imgThumb {
+  width: auto !important;
+  height: auto !important;
+  min-width: initial !important;
+  max-width: auto !important;
+  min-height: initial !important;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+}
+
+.rowPrice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+  padding-bottom: 8px;
+}
+
+.shopName {
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  max-width: calc(100% - 20px);
+
+  @include text-ellipsis();
+}
+
+.name {
+  color: $color-white !important;
+  letter-spacing: 0.8px;
+}
+
+.actions {
+  display: flex;
+}
+
+.button {
+  background-color: $color-red;
+  color: $color-white;
+  border-radius: 4px;
+  width: 100%;
+  height: 31px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 12px;
+  line-height: 32px;
+  font-weight: bold;
+  text-align: center;
+  @include transition();
+}
+
+.buttonCancel,
+.buttonDetail {
+  background-color: #404040;
+  color: $color-white;
+  @include flex-center();
+}
+
+.price {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.priceWallet {
+  color: $color-red;
+}
+
+.priceDollar {
+  color: #9c9c9c;
+}
+
+.buttonDisabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.line {
+  height: 1px;
+  width: 100%;
+  background-color: #4d4d4d;
+  margin: 13.5px 0;
+}
+
+.iconTransfer,
+.iconShare {
+  &:hover {
+    stroke: white;
+  }
+}
+
+.circleProgress {
+  width: 20px;
+  height: 20px;
+  color: $color-white !important;
+}
