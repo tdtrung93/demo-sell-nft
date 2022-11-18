@@ -2,9 +2,11 @@ import { api, Callback, EthAsset } from '@interfaces/index';
 import { getBalanceByPaymentTokenAddress } from '@utils/index';
 import { getPriceString } from '@utils/getPriceString';
 import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
 import { get } from 'lodash';
 import { useCallback } from 'react';
 import Web3 from 'web3';
+import { provider } from 'web3-core';
 
 declare let window: any;
 
@@ -20,8 +22,26 @@ type Return = {
   signCancelSale: (asset: EthAsset, callback: Callback) => void;
 };
 
+const calculatePrices = (listing_price) => {
+  try {
+    const opensea_fee = (listing_price * 0.025).toFixed(18)
+    const royalty_fee = (listing_price / (1/(10 / 100 / 100))).toFixed(18) // 100 cause percent comes in *100
+    const listing_profit = ethers.utils.parseEther(String((+listing_price - +opensea_fee - +royalty_fee).toFixed(18)))
+    return {
+      listing_profit: listing_profit.toString(),
+      royalty_fee: ethers.utils.parseEther(String(royalty_fee)).toString(),
+      opensea_fee: ethers.utils.parseEther(String(opensea_fee)).toString()
+    }
+  }
+  catch (error) {
+      alert("Error: Listing Price")
+      console.log(error)
+      return -1
+  }
+}
+
 export const useETHContract = (): Return => {
-  const { account } = useWeb3React();
+  const { account, library } = useWeb3React();
 
   let ethereum = null;
   let Web3Client = null;
@@ -64,16 +84,67 @@ export const useETHContract = (): Return => {
       paymentTokenAddress?: string,
       expirationTime?: number
     ) => {
-      await api.sellAsset({
-        account_address: account,
-        asset_contract_address: asset?.asset_contract?.address,
-        token_id: asset?.token_id,
-        price: +price,
-        schema_name: asset.asset_contract.schema_name,
-        payment_token_address: paymentTokenAddress,
-        provider: Web3Client?.currentProvider,
-        expirationTime: expirationTime,
-        callback
+      const salt = ethers.utils.solidityKeccak256(
+        ['string'],
+        [`${Date.now().toString()}${account}`],
+      );
+      const prices = calculatePrices(price);
+      if (prices === -1) return;
+      const parameters = {
+        offerer: account,
+        zone: "0x0000000000000000000000000000000000000000",
+        zoneHash: "0x0000000000000000000000000000000000000000000000000000000000000000",
+        startTime: Math.floor(new Date().getTime() / 1000),
+        endTime: 1671369317,
+        orderType: 0,
+        offer: [
+          {
+            itemType: 2,
+            token: asset?.asset_contract?.address,
+            identifierOrCriteria: asset?.token_id,
+            startAmount: '1',
+            endAmount: '1'
+          }
+        ],
+        consideration: [
+          {
+            itemType: 0,
+            token: '0x0000000000000000000000000000000000000000',
+            identifierOrCriteria: '0',
+            startAmount: prices.listing_profit,
+            endAmount: prices.listing_profit,
+            recipient: account,
+          },
+          {
+            itemType: 0,
+            token: '0x0000000000000000000000000000000000000000',
+            identifierOrCriteria: '0',
+            startAmount: prices.opensea_fee,
+            endAmount: prices.opensea_fee,
+            recipient: '0x0000a26b00c1F0DF003000390027140000fAa719',
+          }
+        ],
+        totalOriginalConsiderationItems: 2,
+        salt: salt,
+        conduitKey: '0x0000007b02230091a7ed01230072f7006a004d60a8d4e71d599b8104250f0000',
+        nonce: 0,
+        counter: 0,
+      };
+      fetch(`https://testnets-api.opensea.io/v2/orders/goerli/seaport/listings`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          parameters,
+          signature: '0x' // TODO: should be `signature` from oreID app
+        }),
+      }).then((response) => {
+        return response.json();
+      }).then((res) => {
+        console.log('create listing successfully', res)
+        callback();
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

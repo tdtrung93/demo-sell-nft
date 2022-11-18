@@ -93,24 +93,18 @@ interface Props {
   onChangeExpirationTime?: (time: number) => void;
 }
 
+const payment_tokens = [
+  {
+    symbol: "ETH",
+  }
+];
 
 const OpenseaPrice = ({ nftItem, isOwner, onInputChange, onSelectChange, onChangeExpirationTime, ...props }: Props) => {
-  const payment_tokens = [
-    {
-      symbol: "ETH"
-    }
-  ];
-
   const [price, setPrice] = useState(0);
-  const [token, setToken] = useState<OpenSeaFungibleToken>();
+  const [token, setToken] = useState<OpenSeaFungibleToken>(payment_tokens[0]);
   const options = getDuration();
   const [expirationTime, setExpirationTime] = useState(options.find((duration) => duration.value === 7));
 
-  useEffect(() => {
-    if (payment_tokens.length > 0) {
-      setToken(payment_tokens[0]);
-    }
-  }, [payment_tokens]);
 
   const handleChange = (event) => {
     setPrice(event.target.value);
