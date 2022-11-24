@@ -6,7 +6,7 @@ import { ethers } from 'ethers';
 import { get } from 'lodash';
 import { useCallback } from 'react';
 import Web3 from 'web3';
-import { provider } from 'web3-core';
+import { Seaport } from "@opensea/seaport-js";
 
 declare let window: any;
 
@@ -50,6 +50,16 @@ export const useETHContract = (): Return => {
     ethereum = window.ethereum;
     Web3Client = new Web3(ethereum);
   }
+
+  const seaportProvider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = seaportProvider.getSigner();
+  // @ts-ignore
+  const seaport = new Seaport(signer, {});
+
+  const getSign = async (parameters) => {
+    const signature = await seaport.signOrder(parameters, 0)
+    return signature;
+}
 
   const signBuyAsset = useCallback(
     async (asset: any, callback: Callback) => {
@@ -130,6 +140,8 @@ export const useETHContract = (): Return => {
         nonce: 0,
         counter: 0,
       };
+      const signature = await getSign(parameters)
+
       fetch(`https://testnets-api.opensea.io/v2/orders/goerli/seaport/listings`, {
         method: 'POST',
         headers: {
@@ -138,7 +150,7 @@ export const useETHContract = (): Return => {
         },
         body: JSON.stringify({
           parameters,
-          signature: '0x' // TODO: should be `signature` from oreID app
+          signature: signature // TODO: should be `signature` from oreID app
         }),
       }).then((response) => {
         return response.json();

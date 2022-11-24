@@ -2804,6 +2804,15 @@
     ethers "^5.6.7"
     merkletreejs "^0.2.31"
 
+"@opensea/seaport-js@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@opensea/seaport-js/-/seaport-js-1.0.8.tgz#7609e24b6e8b30ebea4dba149379273aa0a271f1"
+  integrity sha512-xug0bTfHbu/Oz78hg0cXOPk12yW8EhvXzlqXBrrFkQCzk/6xU245+3oTVg/kHt2oToym0OYUTgREdxU998zRxA==
+  dependencies:
+    "@0xsequence/multicall" "^0.39.0"
+    ethers "^5.6.7"
+    merkletreejs "^0.2.31"
+
 "@pedrouid/environment@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@pedrouid/environment/-/environment-1.0.1.tgz#858f0f8a057340e0b250398b75ead77d6f4342ec"
