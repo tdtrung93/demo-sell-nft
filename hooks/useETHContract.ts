@@ -6,7 +6,7 @@ import { ethers } from 'ethers';
 import { get } from 'lodash';
 import { useCallback } from 'react';
 import Web3 from 'web3';
-import { Seaport } from "@opensea/seaport-js";
+import { EIP_712_ORDER_TYPE } from '@interfaces/constants/ether';
 
 declare let window: any;
 
@@ -51,15 +51,32 @@ export const useETHContract = (): Return => {
     Web3Client = new Web3(ethereum);
   }
 
-  const seaportProvider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = seaportProvider.getSigner();
-  // @ts-ignore
-  const seaport = new Seaport(signer, {});
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  
+  const _getSigner = (accountAddress: string) => {
+    return provider.getSigner(accountAddress);
+  }
 
-  const getSign = async (parameters) => {
-    const signature = await seaport.signOrder(parameters, 0)
-    return signature;
-}
+  const signOrder = async (orderParameters, accountAddress) => {
+    const signer = _getSigner(accountAddress);
+    const { chainId } = await provider.getNetwork();
+
+    const domainData = {
+      name: "Seaport",
+      version: "1.1",
+      chainId,
+      verifyingContract: "0x00000000006c3852cbef3e08e8df289169ede581"
+    };
+
+    const orderComponents = {...orderParameters, counter: 0};
+
+    const signature = await signer._signTypedData(
+      domainData,
+      EIP_712_ORDER_TYPE,
+      orderComponents
+    );
+    return ethers.utils.splitSignature(signature).compact;
+  }
 
   const signBuyAsset = useCallback(
     async (asset: any, callback: Callback) => {
@@ -140,7 +157,7 @@ export const useETHContract = (): Return => {
         nonce: 0,
         counter: 0,
       };
-      const signature = await getSign(parameters)
+      const signature = await signOrder(parameters, account)
 
       fetch(`https://testnets-api.opensea.io/v2/orders/goerli/seaport/listings`, {
         method: 'POST',
